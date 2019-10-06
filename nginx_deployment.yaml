@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: default
+  labels:
+    name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        resources:
+          limits:
+#            memory: "256Mi"
+#            cpu: "750m"
+        ports:    
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        volumeMounts:  
+        - readOnly: true  
+          mountPath: /usr/share/nginx/html  
+          name: html-files
+      volumes:  
+      - name: html-files  
+        persistentVolumeClaim:
+          claimName: nginx-nfs-pvc
